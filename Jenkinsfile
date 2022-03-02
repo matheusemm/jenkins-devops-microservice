@@ -9,7 +9,7 @@ pipeline {
 	}
 
 	stages {
-		stage('Build') {
+		stage('Checkout') {
 			steps {
 				echo "Build"
 				echo "PATH = $PATH"
@@ -22,14 +22,19 @@ pipeline {
 				sh 'docker version'
 			}
 		}
+		stage('Compile') {
+			steps {
+				sh "mvn clean compile"
+			}
+		}
 		stage('Test') {
 			steps {
-				echo "Test"
+				sh "mvn test"
 			}
 		}
 		stage('Integration Test') {
 			steps {
-				echo "Integration Test"
+				sh "mvn failsafe:integration-test failsafe:verify"
 			}
 		}
 	}
